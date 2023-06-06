@@ -61,10 +61,9 @@ a.pure.clear()
 
 # 用一个函数选择性对依赖文件目标路径改名，统一移动到 libs 文件夹，这样更清爽
 def new_dest(package: str):
-    if package == 'base_library.zip' or re.match(r'python\d+.dll', package):
+    if package == 'base_library.zip' or re.fullmatch('python\d*(\.dll)?', package.casefold()):
         return package
     return 'libs' + os.sep + package
-
 a.binaries = [(new_dest(x[0]), x[1], x[2]) for x in a.binaries]
 
 
