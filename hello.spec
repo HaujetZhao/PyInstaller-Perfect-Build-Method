@@ -20,16 +20,11 @@ a = Analysis(
     noarchive=False,
 )
 
+# ============================魔改部分=================================================
+
+
 import re
 import os
-
-# 用一个函数选择性对依赖文件目标路径改名
-def new_dest(package: str):
-    if package == 'base_library.zip' or re.match(r'python\d+.dll', package):
-        return package
-    return 'libs' + os.sep + package
-
-a.binaries = [(new_dest(x[0]), x[1], x[2]) for x in a.binaries]
 
 # 将需要排除的模块写到一个列表（不带 .py）
 my_modules = ['hello_main', ]
@@ -43,9 +38,29 @@ for name in my_modules:
 # 筛选 a.pure
 a.pure = [x for x in a.pure if x[0] not in my_modules]
 
+
+# 把 a.pure 中原本要打包进 exe 的 py 文件以二进制依赖文件复制
+a.binaries.extend([(x[1][x[1].find(x[0].replace('.', sep)):], 
+                    x[1], 
+                    'BINARY') 
+                    for x in a.pure])
+a.pure.clear()
+
+
+# 用一个函数选择性对依赖文件目标路径改名
+def new_dest(package: str):
+    if package == 'base_library.zip' or re.match(r'python\d+.dll', package):
+        return package
+    return 'libs' + os.sep + package
+
+a.binaries = [(new_dest(x[0]), x[1], x[2]) for x in a.binaries]
+
+
 # 打印 a.dates ，显示哪些文件被复制到打包文件夹
-from pprint import pprint
-pprint(a.datas)
+# from pprint import pprint
+# pprint(a.datas)
+
+# =============================================================================
 
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
