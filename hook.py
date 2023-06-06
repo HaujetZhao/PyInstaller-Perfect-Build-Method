@@ -1,6 +1,5 @@
 import sys
 from pathlib import Path
-from pprint import pprint
 
 BASE_DIR = Path(__file__).parent
 
