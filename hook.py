@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 
 BASE_DIR = Path(__file__).parent
+sys._MEIPASS= str(BASE_DIR / 'libs')
 
 # 为所有已存在于 sys.path 中的路径都插入 libs ，加到 sys.path 中
 # 让程序到 libs 文件夹查找依赖
