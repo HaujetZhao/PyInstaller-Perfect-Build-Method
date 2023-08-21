@@ -20,9 +20,9 @@ datas = []
 manual_modules = []
 for m in manual_modules:
     if not find_spec(m): continue
-    p1 = dirname(find_spec(m).origin)
-    p2 = m
-    datas.append((p1, p2))
+    src = dirname(find_spec(m).origin)
+    dst = m
+    datas.append((src, dst))
 
 # 这是要额外复制的文件夹
 my_folders = ['assets']
